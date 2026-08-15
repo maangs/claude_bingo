@@ -21,13 +21,13 @@ function App() {
   const [zoom, setZoom] = useState(1)
   const [view, setView] = useState<'game' | 'print'>('game')
 
-  function startGame(chosenSize: BoardSize) {
+  function startGame(chosenSize: BoardSize, keepZoom = false) {
     const words = pickRandomWords(allWords, chosenSize * chosenSize)
     setSize(chosenSize)
     setBoardWords(words)
     setMarked(new Array(words.length).fill(false))
     setHasWon(false)
-    setZoom(1)
+    if (!keepZoom) setZoom(1)
   }
 
   function handleToggle(index: number) {
@@ -50,7 +50,7 @@ function App() {
   }
 
   function playAgainSameSize() {
-    if (size) startGame(size)
+    if (size) startGame(size, true)
   }
 
   function zoomIn() {
