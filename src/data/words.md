@@ -32,3 +32,8 @@
 - Noodling
 - Whirring
 - Boogieing
+- Infusing
+- Sublimating
+- Doing
+- Fluttering
+- Hyberspacing
