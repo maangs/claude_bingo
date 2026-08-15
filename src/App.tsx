@@ -10,6 +10,11 @@ import { checkWin } from './utils/bingo'
 const ZOOM_MIN = 0.5
 const ZOOM_MAX = 2
 const ZOOM_STEP = 0.1
+const MOBILE_BREAKPOINT = 640
+
+function getDefaultZoom() {
+  return window.innerWidth < MOBILE_BREAKPOINT ? 0.5 : 1
+}
 
 function App() {
   const allWords = useMemo(() => loadWords(), [])
@@ -18,7 +23,7 @@ function App() {
   const [boardWords, setBoardWords] = useState<string[]>([])
   const [marked, setMarked] = useState<boolean[]>([])
   const [hasWon, setHasWon] = useState(false)
-  const [zoom, setZoom] = useState(1)
+  const [zoom, setZoom] = useState(getDefaultZoom)
   const [view, setView] = useState<'game' | 'print'>('game')
 
   function startGame(chosenSize: BoardSize, keepZoom = false) {
@@ -27,7 +32,7 @@ function App() {
     setBoardWords(words)
     setMarked(new Array(words.length).fill(false))
     setHasWon(false)
-    if (!keepZoom) setZoom(1)
+    if (!keepZoom) setZoom(getDefaultZoom())
   }
 
   function handleToggle(index: number) {
@@ -80,16 +85,18 @@ function App() {
           <SizeSelector availableWordCount={allWords.length} onSelect={startGame} />
         ) : (
           <>
-            <div className="no-print flex items-center gap-4">
+            <div className="no-print flex flex-col items-center gap-3">
               <h1 className="text-2xl font-bold text-slate-800">Johans Claude Bingo — {size} x {size}</h1>
-              <button
-                type="button"
-                onClick={reset}
-                className="rounded-md border border-slate-300 bg-white px-3 py-1 text-sm font-medium text-slate-600 shadow-sm transition hover:border-indigo-400 hover:text-indigo-600"
-              >
-                Back to start
-              </button>
-              <ZoomControls zoom={zoom} min={ZOOM_MIN} max={ZOOM_MAX} onZoomIn={zoomIn} onZoomOut={zoomOut} />
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="rounded-md border border-slate-300 bg-white px-3 py-1 text-sm font-medium text-slate-600 shadow-sm transition hover:border-indigo-400 hover:text-indigo-600"
+                >
+                  Back to start
+                </button>
+                <ZoomControls zoom={zoom} min={ZOOM_MIN} max={ZOOM_MAX} onZoomIn={zoomIn} onZoomOut={zoomOut} />
+              </div>
             </div>
             <div className="max-w-full overflow-auto">
               <BingoBoard size={size} words={boardWords} marked={marked} zoom={zoom} onToggle={handleToggle} />
